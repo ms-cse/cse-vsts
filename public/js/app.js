@@ -37,7 +37,7 @@ $(document).ready(function () {
                 tags: $('#tags').val()
             }).done(function(res) {
                 console.log(res);
-                $("#main-container").html("<h2>VSTS - Create Activity</h2><br/><br/>You're activity has been successfully added.<br/><a href='https://cseng.visualstudio.com/CSEng/_workitems?id="+res.id+"' target='_blank'>Click here to view your activity</a><br/><br/><a href='javascript:window.location.reload(true)'>Click here to add another activity</a>");
+                $("#main-container").html("<h2>VSTS - Create Activity</h2><br/>You're activity has been successfully added.<br/><a href='https://cseng.visualstudio.com/CSEng/_workitems?id="+res.id+"' target='_blank'>Click here to view your activity</a><br/><br/><a href='javascript:window.location.reload(true)'>Click here to add another activity</a>");
             });
 
         }
