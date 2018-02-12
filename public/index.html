@@ -1,0 +1,172 @@
+﻿<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/css/bootstrap.min.css" integrity="sha384-Zug+QiDoJOrZ5t4lssLdxGhVrurbmBWopoEl+M6BdEfwnCJZtKxi1KgxUyJq13dy" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.7.1/css/bootstrap-datepicker.css" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-tagsinput/0.8.0/bootstrap-tagsinput.css" rel="stylesheet">
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+    <link rel="stylesheet" href="./css/style.css" />
+
+    <title>VSTS - Create Activity</title>
+
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/js/bootstrap.min.js" integrity="sha384-a5N7Y/aK3qNeh15eJKGWxsqtnX/wWdSZSKp+81YjTmS15nvnvxKHuzaWwXHDli+4" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.7.1/js/bootstrap-datepicker.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-tagsinput/0.8.0/bootstrap-tagsinput.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-3-typeahead/4.0.2/bootstrap3-typeahead.min.js"></script>
+
+    <script src="./js/app.js"></script>
+</head>
+
+<body>
+
+    <form id="uploadForm">
+
+        <div class="container" id="main-container">
+
+
+            <h2>VSTS - Create Activity</h2>
+
+            <div class="row">
+                <div class="col">
+                    <div class="form-group">
+                        <label for="projectId">Project ID</label>
+                        <input type="text" class="form-control" id="projectId" />
+                        <span class="input-group-addon project-addon">
+                            <span class="fa fa-search" id="searchProject"></span>
+                        </span>
+                    </div>
+                </div>
+
+                 <div class="col">
+                    <div class="form-group">
+                        <label for="name">Activity Name</label>
+                        <input type="text" class="form-control" id="name" />
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="row">
+                <div class="col">
+                    <div class="form-group">
+                        <label for="areapath">Area Path</label>
+                        <input type="text" class="form-control" id="areapath" disabled />
+                    </div>
+                </div>
+
+                <div class="col">
+                    <div class="form-group">
+                        <label for="country">Country</label>
+                        <input type="text" class="form-control" id="country" disabled />
+                    </div>
+                </div>
+
+                <div class="col">
+                    <div class="form-group">
+                        <label for="city">City</label>
+                        <input type="text" class="form-control" id="city" disabled />
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="row">
+
+                <div class="col">
+                    <div class="form-group">
+                        <label for="owner">Owner</label>
+                        <input type="text" class="form-control" id="owner" value="Bart Jansen" disabled />
+                    </div>
+                </div>
+
+                <div class="col">
+                    <div class="form-group">
+                        <label for="activitytype">Activity Type</label>
+                        <select class="form-control" id="activitytype">
+                            <option value="Coding and Testing" selected>Coding and Testing</option>
+                            <option value="Demand Generation and Marketing">Demand Generation and Marketing</option>
+                            <option value="Design session or Review">Design session or Review</option>
+                            <option value="Engineering Feedback">Engineering Feedback</option>
+                            <option value="Evangelism In-Person Attend (Community Event, Booth)">Evangelism In-Person Attend (Community Event, Booth)</option>
+                            <option value="Evangelism In-Person Present (Technical Presentation, Speaking)">Evangelism In-Person Present (Technical Presentation, Speaking)</option>
+                            <option value="Evangelism Online (Blogs, Podcasts, Articles, Social Media)">Evangelism Online (Blogs, Podcasts, Articles, Social Media)</option>
+                            <option value="Hackfest">Hackfest</option>
+                            <option value="Internal Administration and Management - General">Internal Administration and Management - General</option>
+                            <option value="Personal Development, Upskilling and Training">Personal Development, Upskilling and Training</option>
+                            <option value="Technical Account and Program Management">Technical Account and Program Management</option>
+                            <option value="Technical qualifying and envisioning">Technical qualifying and envisioning</option>
+                            <option value="Unavailable">Unavailable</option>
+                        </select>
+                    </div>
+                </div>
+
+            </div>
+
+
+
+
+            <div class="row">
+                <div class="col">
+                    <div class="form-group">
+                        <label for="channel">Start date</label>
+                        <div class='input-group date' data-provide="datepicker" data-date-format="dd/mm/yyyy">
+                            <input type='text' class="form-control" id="date-from" />
+                            <span class="input-group-addon calendar-addon">
+                            <span class="fa fa-calendar"></span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col">
+                    <div class="form-group">
+                        <label for="duration">Duration (days)</label>
+                        <input type="text" class="form-control" id="duration" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col">
+                    <div class="form-group">
+                    <label for="description">Description</label>
+                    <textarea class="form-control" rows="4" id="description"></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col">
+                    <div class="form-group">
+                        <label for="goal">Technical Goal</label>
+                        <textarea class="form-control" rows="4" id="goal"></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col">
+                    <div class="form-group">
+                        <label for="activity_tags">Activity Tags</label><br/>
+                        <input type="text"  id="tags" class="tagsinput-typeahead">
+                    </div>
+                </div>
+            </div>
+
+            <button type="button" class="btn btn-primary" id="submitBtn">Submit</button>
+        </div>
+    </form>
+
+    <script type="text/javascript">
+
+    </script>
+</body>
+</html>
