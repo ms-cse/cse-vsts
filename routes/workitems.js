@@ -1,6 +1,8 @@
+'use strict';
+
 let application = require('../application');
-let express = require('express');
-let router = express.Router();
+let express     = require('express');
+let router      = express.Router();
 let vsts        = require('vso-node-api');
 
 let creds = vsts.getPersonalAccessTokenHandler(application.authToken);
@@ -8,7 +10,7 @@ let connection = new vsts.WebApi(application.collectionUrl, creds);
 let vstsWI = connection.getWorkItemTrackingApi();
 
 router.get('/:workItemId', (req, res) => {
-    vstsWI.getWorkItem(req.params.workItemId).then(function(workItem) {
+    vstsWI.getWorkItem(req.params.workItemId).then(workItem => {
         // console.log(res);
         if(workItem && workItem.fields) {
             if(workItem.fields['System.WorkItemType'] == "Project or Engagement") {
@@ -76,16 +78,15 @@ router.post('/new', (req, res) => {
             }
         }];
 
-        vstsWI.createWorkItem(null, json, application.projectName, application.WIType).then(function(workItem) {
+        vstsWI.createWorkItem(null, json, application.projectName, application.WIType).then(workItem => {
             if(workItem) {
                 res.json(workItem)
             }
             else {
                 res.status(501).json({ message: 'something went wrong' });
             }
-        })
+        });
     }
 });
-
 
 module.exports = router;

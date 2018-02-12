@@ -11,7 +11,6 @@ let application = require('./application');
 //routes
 let workitems   = require('./routes/workitems');
 
-
 let app         = express();
 let server      = http.createServer(app);
 

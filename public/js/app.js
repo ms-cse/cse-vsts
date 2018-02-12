@@ -12,13 +12,14 @@ $(document).ready(function () {
     });
 
     // initialize bootstrap datepickers
-    $('.datepicker').datepicker({
-        icons: {
-            date: "fa fa-calendar",
-            up: "fa fa-arrow-up",
-            down: "fa fa-arrow-down"
-        }
-    });
+    $('#datepicker').datepicker({
+        autoclose: true,
+        todayHighlight: true
+    }).datepicker("setDate",'now');
+
+   // $("#date-from").datepicker("setDate", new Date());
+
+
 
     document.getElementById("submitBtn").addEventListener("click", () => {
 
@@ -37,26 +38,30 @@ $(document).ready(function () {
                 tags: $('#tags').val()
             }).done(function(res) {
                 console.log(res);
-                $("#main-container").html("<h2>VSTS - Create Activity</h2><br/>You're activity has been successfully added.<br/><a href='https://cseng.visualstudio.com/CSEng/_workitems?id="+res.id+"' target='_blank'>Click here to view your activity</a><br/><br/><a href='javascript:window.location.reload(true)'>Click here to add another activity</a>");
+                $("#main-container").html("<h2>VSTS - Create Activity</h2><br/>Your activity has been successfully added.<br/><a href='https://cseng.visualstudio.com/CSEng/_workitems?id="+res.id+"' target='_blank'>Click here to view your activity</a><br/><br/><a href='javascript:window.location.reload(true)'>Click here to add another activity</a>");
             });
 
+        }
+        else {
+            alert('Please fill in a project, name, date and duration');
         }
     });
 
     document.getElementById("searchProject").addEventListener("click", () => {
-        console.log('searching project');
-
         if($('#projectId').val()) {
 
             projectId = $('#projectId').val();
 
-            $.getJSON('/workitems/' + $('#projectId').val(), function(workItemData) {
-                console.log(workItemData);
+            $.getJSON('/workitems/' + $('#projectId').val(), workItemData => {
+
                 $('#areapath').val(workItemData['System.AreaPath'])
                 $('#country').val(workItemData['CSEngineering.CountrySelection'])
                 $('#city').val(workItemData['CSEngineering.City'])
 
                 $('#projectId').val(projectId + ' (' + workItemData['System.Title'] + ')');
+            })
+            .fail(() => {
+                window.alert('Couldn\'t find Project or Engagement with this Project ID')
             });
         }
 
