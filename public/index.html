@@ -21,11 +21,42 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.7.1/js/bootstrap-datepicker.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-tagsinput/0.8.0/bootstrap-tagsinput.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-3-typeahead/4.0.2/bootstrap3-typeahead.min.js"></script>
+    <script src="https://secure.aadcdn.microsoftonline-p.com/lib/1.0.16/js/adal.min.js"></script>
 
     <script src="./js/app.js"></script>
 </head>
 
 <body>
+    <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog"  aria-hidden="true" id="projectSearch">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Select a project (<img src="img/project.png" width="24">) from the list below</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <table class="table table-sm project-table table-responsive">
+                  <thead>
+                    <tr class="no-hover">
+                      <th>Title</th>
+                      <th class="d-none d-sm-table-cell d-sm-block">Owner</th>
+                      <th class="d-none d-sm-table-cell d-sm-block">City</th>
+                      <th class="d-none d-sm-table-cell d-sm-block">Country</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                  </tbody>
+                </table>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="selectProjectBtn">Select project</button>
+              </div>
+            </div>
+          </div>
+    </div>
 
     <form id="uploadForm">
 
@@ -34,130 +65,136 @@
             <h2>VSTS - Create Activity</h2>
 
             <div class="row">
-                <div class="col">
-                    <div class="form-group">
-                        <label for="projectId">Project ID</label>
-                        <input type="text" class="form-control" id="projectId" />
-                        <span class="input-group-addon project-addon">
-                            <span class="fa fa-search" id="searchProject"></span>
-                        </span>
-                    </div>
-                </div>
-
-                 <div class="col">
-                    <div class="form-group">
-                        <label for="name">Activity Name</label>
-                        <input type="text" class="form-control" id="name" />
-                    </div>
-                </div>
-
+                <div class="col"><a href="#" id="loginBtn">Click here to login</a><br/><br/></div>
             </div>
 
-            <div class="row">
-                <div class="col">
-                    <div class="form-group">
-                        <label for="areapath">Area Path</label>
-                        <input type="text" class="form-control" id="areapath" disabled />
-                    </div>
-                </div>
-
-                <div class="col">
-                    <div class="form-group">
-                        <label for="country">Country</label>
-                        <input type="text" class="form-control" id="country" disabled />
-                    </div>
-                </div>
-
-                <div class="col">
-                    <div class="form-group">
-                        <label for="city">City</label>
-                        <input type="text" class="form-control" id="city" disabled />
-                    </div>
-                </div>
-            </div>
-
-
-            <div class="row">
-
-                <div class="col">
-                    <div class="form-group">
-                        <label for="owner">Owner</label>
-                        <input type="text" class="form-control" id="owner" value="Bart Jansen" disabled />
-                    </div>
-                </div>
-
-                <div class="col">
-                    <div class="form-group">
-                        <label for="activitytype">Activity Type</label>
-                        <select class="form-control" id="activitytype">
-                            <option value="Coding and Testing" selected>Coding and Testing</option>
-                            <option value="Demand Generation and Marketing">Demand Generation and Marketing</option>
-                            <option value="Design session or Review">Design session or Review</option>
-                            <option value="Engineering Feedback">Engineering Feedback</option>
-                            <option value="Evangelism In-Person Attend (Community Event, Booth)">Evangelism In-Person Attend (Community Event, Booth)</option>
-                            <option value="Evangelism In-Person Present (Technical Presentation, Speaking)">Evangelism In-Person Present (Technical Presentation, Speaking)</option>
-                            <option value="Evangelism Online (Blogs, Podcasts, Articles, Social Media)">Evangelism Online (Blogs, Podcasts, Articles, Social Media)</option>
-                            <option value="Hackfest">Hackfest</option>
-                            <option value="Internal Administration and Management - General">Internal Administration and Management - General</option>
-                            <option value="Personal Development, Upskilling and Training">Personal Development, Upskilling and Training</option>
-                            <option value="Technical Account and Program Management">Technical Account and Program Management</option>
-                            <option value="Technical qualifying and envisioning">Technical qualifying and envisioning</option>
-                            <option value="Unavailable">Unavailable</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-
-
-            <div class="row">
-                <div class="col">
-                    <div class="form-group">
-                        <label for="channel">Start date</label>
-                        <div class='input-group date' data-provide="datepicker" id="datepicker" data-date-format="dd/mm/yyyy">
-                            <input type='text' class="form-control" id="date-from" />
-                            <span class="input-group-addon calendar-addon">
-                            <span class="fa fa-calendar"></span>
+            <div id="activityForm" style="display: none;">
+                <div class="row">
+                    <div class="col">
+                        <div class="form-group">
+                            <label for="projectId">Project ID</label>
+                            <input type="text" class="form-control" id="projectId" />
+                            <span class="input-group-addon project-addon">
+                                <span class="fa fa-search" id="searchProject"></span>
                             </span>
+                        </div>
+                    </div>
+
+                     <div class="col">
+                        <div class="form-group">
+                            <label for="name" id="activityLabel">Activity Name</label>
+                            <input type="text" class="form-control" id="name" disabled placeholder="Select a project first"  />
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="row">
+                    <div class="col">
+                        <div class="form-group">
+                            <label for="areapath">Area Path</label>
+                            <input type="text" class="form-control" id="areapath" disabled />
+                        </div>
+                    </div>
+
+                    <div class="col">
+                        <div class="form-group">
+                            <label for="country">Country</label>
+                            <input type="text" class="form-control" id="country" disabled />
+                        </div>
+                    </div>
+
+                    <div class="col">
+                        <div class="form-group">
+                            <label for="city">City</label>
+                            <input type="text" class="form-control" id="city" disabled />
                         </div>
                     </div>
                 </div>
 
-                <div class="col">
-                    <div class="form-group">
-                        <label for="duration">Duration (days)</label>
-                        <input type="text" class="form-control" id="duration" />
+
+                <div class="row">
+
+                    <div class="col">
+                        <div class="form-group">
+                            <label for="owner">Owner</label>
+                            <input type="text" class="form-control" id="owner" disabled />
+                        </div>
+                    </div>
+
+                    <div class="col" id="activitySelector">
+                        <div class="form-group">
+                            <label for="activitytype">Activity Type</label>
+                            <select class="form-control" id="activitytype">
+                                <option value="Coding and Testing" selected>Coding and Testing</option>
+                                <option value="Demand Generation and Marketing">Demand Generation and Marketing</option>
+                                <option value="Design session or Review">Design session or Review</option>
+                                <option value="Engineering Feedback">Engineering Feedback</option>
+                                <option value="Evangelism In-Person Attend (Community Event, Booth)">Evangelism In-Person Attend (Community Event, Booth)</option>
+                                <option value="Evangelism In-Person Present (Technical Presentation, Speaking)">Evangelism In-Person Present (Technical Presentation, Speaking)</option>
+                                <option value="Evangelism Online (Blogs, Podcasts, Articles, Social Media)">Evangelism Online (Blogs, Podcasts, Articles, Social Media)</option>
+                                <option value="Hackfest">Hackfest</option>
+                                <option value="Internal Administration and Management - General">Internal Administration and Management - General</option>
+                                <option value="Personal Development, Upskilling and Training">Personal Development, Upskilling and Training</option>
+                                <option value="Technical Account and Program Management">Technical Account and Program Management</option>
+                                <option value="Technical qualifying and envisioning">Technical qualifying and envisioning</option>
+                                <option value="Unavailable">Unavailable</option>
+                            </select>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <div class="row">
-                <div class="col">
-                    <div class="form-group">
-                    <label for="description">Description</label>
-                    <textarea class="form-control" rows="4" id="description"></textarea>
+
+                <div class="row">
+                    <div class="col">
+                        <div class="form-group">
+                            <label for="channel">Start date</label>
+                            <div class='input-group date' data-provide="datepicker" id="datepicker" data-date-format="dd/mm/yyyy">
+                                <input type='text' class="form-control" id="date-from" />
+                                <span class="input-group-addon calendar-addon">
+                                <span class="fa fa-calendar"></span>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col">
+                        <div class="form-group">
+                            <label for="duration">Duration (days)</label>
+                            <input type="text" class="form-control" id="duration" />
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <div class="row">
-                <div class="col">
-                    <div class="form-group">
-                        <label for="goal">Technical Goal</label>
-                        <textarea class="form-control" rows="4" id="goal"></textarea>
+                <div class="row">
+                    <div class="col">
+                        <div class="form-group">
+                        <label for="description">Description</label>
+                        <textarea class="form-control" rows="4" id="description"></textarea>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <div class="row">
-                <div class="col">
-                    <div class="form-group">
-                        <label for="activity_tags">Activity Tags</label><br/>
-                        <input type="text"  id="tags" class="tagsinput-typeahead">
+                <div class="row" id="goalSelector">
+                    <div class="col">
+                        <div class="form-group">
+                            <label for="goal">Technical Goal</label>
+                            <textarea class="form-control" rows="4" id="goal"></textarea>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <button type="button" class="btn btn-primary" id="submitBtn">Submit</button>
+                <div class="row">
+                    <div class="col">
+                        <div class="form-group">
+                            <label for="activity_tags">Activity Tags</label><br/>
+                            <input type="text"  id="tags" class="tagsinput-typeahead">
+                        </div>
+                    </div>
+                </div>
+
+                <button type="button" class="btn btn-primary" id="submitBtn">Submit</button>
+            </div>
         </div>
     </form>
 

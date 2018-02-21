@@ -43,3 +43,23 @@
 #submitBtn {
     float: right;
 }
+
+table.project-table tr:not(.no-hover):not(.selected):hover {
+    background-color: #ececec;
+    cursor: pointer;
+}
+
+table.project-table tr.selected {
+    background-color: #007bff;
+    color: #fff;
+}
+
+table.project-table thead th {
+    border-top: 0px;
+}
+
+#loginForm {
+    margin-top: 80px;
+    text-align: center;
+
+}
