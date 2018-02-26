@@ -17,7 +17,8 @@ app.use(bodyParser.urlencoded({extended: true}));
 
 app.use('/workitems', workitems);
 
-app.use('/', express.static(path.join(__dirname, 'public'), {'x-content-type-options': 'nosniff'}));
+app.use('/', express.static(path.join(__dirname, 'public')));
+app.use('/null', express.static(path.join(__dirname, 'public')));
 
 app.set('port', process.env.PORT || 3000);
 

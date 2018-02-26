@@ -1,6 +1,6 @@
  //========= ADAL Input Vars ==========================
 let clientId = '080c1615-76d7-4ba0-97c7-3e57aab018d0';
-let replyUri = window.location.href;
+let replyUri = window.location.origin;
 let vstsResourceId = '499b84ac-1321-427f-aa17-267ca6975798';
 //=====================================================
 
@@ -12,10 +12,16 @@ let authContext = new AuthenticationContext({
     clientId: clientId,
     redirectUri: replyUri,
     postLogoutRedirectUri: replyUri,
-    cacheLocation: 'localStorage'
+    cacheLocation: 'localStorage' // for MS Edge
 });
-//http://csevsts.azurewebsites.net/#id_token=eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6IlNTUWRoSTFjS3ZoUUVEU0p4RTJnR1lzNDBRMCIsImtpZCI6IlNTUWRoSTFjS3ZoUUVEU0p4RTJnR1lzNDBRMCJ9.eyJhdWQiOiIwODBjMTYxNS03NmQ3LTRiYTAtOTdjNy0zZTU3YWFiMDE4ZDAiLCJpc3MiOiJodHRwczovL3N0cy53aW5kb3dzLm5ldC83MmY5ODhiZi04NmYxLTQxYWYtOTFhYi0yZDdjZDAxMWRiNDcvIiwiaWF0IjoxNTE5MzA5MzA2LCJuYmYiOjE1MTkzMDkzMDYsImV4cCI6MTUxOTMxMzIwNiwiYWlvIjoiWTJOZ1lIaFVIVGhuazFOSXVORmR6MStoczE1RzNtY090ZHk1SkRHcGYrT2JQeUt0ajBNQSIsImFtciI6WyJ3aWEiXSwiZmFtaWx5X25hbWUiOiJKYW5zZW4iLCJnaXZlbl9uYW1lIjoiQmFydCIsImluX2NvcnAiOiJ0cnVlIiwiaXBhZGRyIjoiODMuMjE5Ljc1LjEwIiwibmFtZSI6IkJhcnQgSmFuc2VuIiwibm9uY2UiOiIzZTZkMDdhOS0xMTE1LTQ3ZjctYTdhNC0zNGEwNDQzZDQ2OGYiLCJvaWQiOiJjODE5ZTUxYy01YjFiLTRmNWYtYjQxYy00NGM5OGNiODViMWEiLCJvbnByZW1fc2lkIjoiUy0xLTUtMjEtMTcyMTI1NDc2My00NjI2OTU4MDYtMTUzODg4MjI4MS0zOTAxNDE0Iiwic3ViIjoid0tBY21sVWpFZE1vaXNyN0dCU2k1bkFiWWEyWFAzd1FPVUZ6SzJPdURTbyIsInRpZCI6IjcyZjk4OGJmLTg2ZjEtNDFhZi05MWFiLTJkN2NkMDExZGI0NyIsInVuaXF1ZV9uYW1lIjoiYmFqYW5zZW5AbWljcm9zb2Z0LmNvbSIsInVwbiI6ImJhamFuc2VuQG1pY3Jvc29mdC5jb20iLCJ1dGkiOiJqUmdMa1UyMUNVS0JfQkQxeXJFSUFBIiwidmVyIjoiMS4wIn0.kDrXa200mzcwAopfY2raDp2YSza38s2qUfsrCpCzZM6TAw1rQKeWfcsJUNsFHNBTLQAgwHmoFQKdLFGfeXXMd0owp3Pj08_-T-NOiPMmojX-O5N-bFCtlU3Vh4iXp73jDz2dZnCAmZmlYSiCcOlC_-GehaoYOkHD_pyY_tEnbm188XxqxPwMrTfUqPIf2qiHnWchw2XTtAj_ju6iz4cAfE4Ih9z6qCyLmucYnQP0fnNNhzqptM8exMYzlnAyvsq7UWiq9f5CQBruvZDox9ywSz0KJ7IUYyamkmqOH4zkKXv7aiGxBqW5NhAPEB3wyJQWebmx5wGInVCzUZk5yCu2hw&state=61dc2c3d-0f5d-4571-ac84-5fd6fa73b7a2&session_state=1dd955ae-8206-4b7e-b438-6d2e6cb021df
+
 $(document).ready(function () {
+    // hack to fix incorrect auth requests
+    if(window.location.href.indexOf('null') !== -1 && !authContext.getCachedUser() ) {
+        authContext.login();
+    }
+
+    // listen to incoming auth requests
     if (authContext.isCallback(window.location.hash)) {
         authContext.handleWindowCallback();
         let err = authContext.getLoginError();
@@ -25,6 +31,7 @@ $(document).ready(function () {
     } else {
         // if logged in, get access token and make an API request
         let user = authContext.getCachedUser();
+        console.log('trying to get usersss', user);
         if (user) {
             $('#activityForm').show();
             $('#loginBtn').html('Click here to logout');
@@ -32,10 +39,15 @@ $(document).ready(function () {
 
             // Get an access token to VSTS
             authContext.acquireToken(vstsResourceId, function (error, token) {
+                console.log(error, token);
                 authToken = token;
-            });
+             });
+        }
+        else {
+            console.log('couldnt get user');
         }
     }
+
 
     //initialize tags input
     $('#tags').tagsinput({
