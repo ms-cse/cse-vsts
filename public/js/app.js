@@ -217,7 +217,8 @@ function createAutocomplete(activityData) {
         if(item[1] === 'Activity') {
             autoCompleteData.push({
                 id: item[0],
-                name: item[7]
+                name: item[7],
+                date: item[12]
             })
         };
     });
@@ -237,6 +238,9 @@ function createAutocomplete(activityData) {
             projectId = current.id;
             toggleParticipantForm(true);
 
+            //update date
+            let dateObj = new Date(parseInt(current.date.substr(6,13)));
+            $('#datepicker').datepicker('setDate', dateObj)
         } else {
             toggleParticipantForm(false);
         }

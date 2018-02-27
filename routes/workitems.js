@@ -74,6 +74,7 @@ router.post('/activities/:projectId', (req, res) => {
         [System.AreaPath],
         [CSEngineering.City],
         [CSEngineering.Country],
+        [CSEngineering.ActivityStartDate],
         [System.Tags]
     FROM WorkItemLinks
     WHERE (
@@ -120,7 +121,7 @@ router.post('/new', (req, res) => {
         let json = [{
             "op": "add",
             "path": "/fields/System.Title",
-            "value": req.body.name
+            "value": req.body.name + (req.body.isParticipant == "true" ? " - " + req.body.owner.split(' <')[0] : "")
         }, {
             "op": "add",
             "path": "/fields/System.AreaPath",
