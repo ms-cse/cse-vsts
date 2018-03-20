@@ -10,6 +10,44 @@ let vsts        = require('vso-node-api');
 // let creds = vsts.getPersonalAccessTokenHandler(application.authToken);
 let creds, connection, vstsWI;
 
+router.post('/activities/query', (req, res) => {
+    let authToken = req.body.token;
+
+    let wiqlQuery = `SELECT
+    [System.Id],
+    [System.WorkItemType],
+    [System.Title],
+    [System.AssignedTo],
+    [CSEngineering.ActivityStartDate],
+    [CSEngineering.ActivityDuration],
+    [CSEngineering.ParticipationStartDate],
+    [CSEngineering.ParticipationDurationDays]
+FROM workitems
+WHERE
+    [System.TeamProject] = @project
+    AND (
+        [System.AssignedTo] = 'Sascha Corti <saschac@microsoft.com>'
+        OR [System.AssignedTo] = 'Campbell Vertesi <cavertes@microsoft.com>'
+        OR [System.AssignedTo] = 'Bart Jansen <bajansen@microsoft.com>'
+        OR [System.AssignedTo] = 'Carlos Sardo <casard@microsoft.com>'
+        OR [System.AssignedTo] = 'Manu Rink <marink@microsoft.com>'
+        OR [System.AssignedTo] = 'Claus M <clmatzin@microsoft.com>'
+        OR [System.AssignedTo] = 'Andreas Heumaier <anheumai@microsoft.com>'
+        OR [System.AssignedTo] = 'Florian Mader <flmader@microsoft.com>'
+    )
+    AND (
+        (
+            [CSEngineering.ActivityStartDate] > '2018-01-01T00:00:00.0000000'
+            AND [System.WorkItemType] = 'Activity'
+        )
+        OR (
+            [System.WorkItemType] = 'Participant'
+            AND [CSEngineering.ParticipationStartDate] > '2018-01-01T00:00:00.0000000'
+        )
+    )
+ORDER BY [System.WorkItemType]`;
+});
+
 router.post('/query', (req, res) => {
     let authToken = req.body.token;
 
