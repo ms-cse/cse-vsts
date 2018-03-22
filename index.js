@@ -10,12 +10,14 @@ let application = require('./application');
 
 //routes
 let workitems   = require('./routes/workitems');
+let overview    = require('./routes/overview');  
 let app         = express();
 let server      = http.createServer(app);
 
 app.use(bodyParser.urlencoded({extended: true}));
 
 app.use('/workitems', workitems);
+app.use('/overview', overview);
 
 app.use('/', express.static(path.join(__dirname, 'public')));
 app.use('/null', express.static(path.join(__dirname, 'public')));

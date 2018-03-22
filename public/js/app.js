@@ -41,6 +41,7 @@ $(document).ready(function () {
             authContext.acquireToken(vstsResourceId, function (error, token) {
                 console.log(error, token);
                 authToken = token;
+                localStorage.setItem('authToken', token);
              });
         }
         else {
@@ -140,24 +141,30 @@ function searchProject() {
                 console.log(workItemData)
                 projectData = workItemData.rows;
 
-                $('#projectSearch').modal('show');
-                let projectHtml = "";
+                console.log(projectData);
+                if(projectData.length === 0) {
+                    window.alert('No projects found for your query')
+                }
+                else {
+                    $('#projectSearch').modal('show');
+                    let projectHtml = "";
 
-                workItemData.rows.forEach(function(item, index) {
-                    projectHtml += `<tr ${item[1] === "Organization" ? "class='no-hover'" : ""} data-id="${index}">
-                      <td><img src="img/${item[1] === "Organization" ? "organization" : "project"}.png" style="margin-left: ${item[1] === "Organization" ? "0" : "20"}px;" width="24"  /> ${item[7]}</td>
-                      <td class="d-none d-sm-table-cell d-sm-block">${item[6]}</td>
-                      <td class="d-none d-sm-table-cell d-sm-block">${item[9]}</td>
-                      <td class="d-none d-sm-table-cell d-sm-block">${item[10]}</td>
-                    </tr>`;
-                });
+                    workItemData.rows.forEach(function(item, index) {
+                        projectHtml += `<tr ${item[1] === "Organization" ? "class='no-hover'" : ""} data-id="${index}">
+                        <td><img src="img/${item[1] === "Organization" ? "organization" : "project"}.png" style="margin-left: ${item[1] === "Organization" ? "0" : "20"}px;" width="24"  /> ${item[7]}</td>
+                        <td class="d-none d-sm-table-cell d-sm-block">${item[6]}</td>
+                        <td class="d-none d-sm-table-cell d-sm-block">${item[9]}</td>
+                        <td class="d-none d-sm-table-cell d-sm-block">${item[10]}</td>
+                        </tr>`;
+                    });
 
-                $('#projectSearch tbody').html(projectHtml);
+                    $('#projectSearch tbody').html(projectHtml);
 
-                $('table.project-table tr:not(.no-hover)').on('click', function(e) {
-                    $('table.project-table tr.selected').removeClass('selected');
-                    $(this).addClass('selected');
-                });
+                    $('table.project-table tr:not(.no-hover)').on('click', function(e) {
+                        $('table.project-table tr.selected').removeClass('selected');
+                        $(this).addClass('selected');
+                    });
+                }
             })
             .fail(() => {
                 window.alert('Couldn\'t find Project or Engagement')
